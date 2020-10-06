@@ -6,6 +6,8 @@ use std::{
     process::{self, Command, Stdio},
 };
 
+mod fix_imports;
+
 const CONFIG_NAME: &str = "Psp.toml";
 
 #[derive(serde_derive::Deserialize, Default)]
@@ -239,6 +241,7 @@ fn main() {
     for id in metadata.clone().workspace_members {
         let package = metadata[&id].clone();
 
+        // TODO: Error if no bin is ever found.
         for target in package.targets {
             if target.kind.iter().any(|k| k == "bin") {
                 let elf_path = bin_dir.join(&target.name);
@@ -246,6 +249,8 @@ fn main() {
 
                 let sfo_path = bin_dir.join("PARAM.SFO");
                 let pbp_path = bin_dir.join("EBOOT.PBP");
+
+                fix_imports::fix(&elf_path);
 
                 Command::new("prxgen")
                     .arg(&elf_path)
