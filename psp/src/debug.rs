@@ -131,6 +131,14 @@ pub fn print_args(arguments: core::fmt::Arguments<'_>) {
     update();
 }
 
+pub fn print(s: &str) {
+    use core::fmt::Write;
+
+    unsafe {
+        let _ = CHARS.write_str(s);
+    }
+}
+
 // TODO: Move to font.
 const ROWS: usize = DISPLAY_HEIGHT / MsxFont::CHAR_HEIGHT;
 const COLS: usize = DISPLAY_WIDTH / MsxFont::CHAR_WIDTH;

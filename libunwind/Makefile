@@ -10,7 +10,7 @@ S_OBJLIST   := UnwindRegistersRestore.o UnwindRegistersSave.o
 CFLAGS   := -std=c99
 CXXFLAGS := -std=c++11 -nostdinc++ -fno-exceptions -fno-rtti
 CPPFLAGS := -target mipsel-unknown-unknown -mcpu=mips2 -msingle-float \
-	-fstrict-aliasing -funwind-tables -O3 \
+	-fstrict-aliasing -funwind-tables -flto -O3 \
 	-D __LITTLE_ENDIAN__ -D __ELF__ -D _LIBUNWIND_IS_BAREMETAL \
 	-D _LIBUNWIND_HAS_NO_THREADS -D _LIBUNWIND_IS_NATIVE_ONLY \
 	-DNDEBUG \

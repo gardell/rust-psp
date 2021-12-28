@@ -13,17 +13,20 @@
 )]
 
 // For unwinding support
-#![feature(std_internals, panic_info_message, panic_internals, c_unwind)]
+#![feature(std_internals, panic_info_message, panic_internals, c_unwind, needs_panic_runtime)]
 #![cfg_attr(not(feature = "stub-only"), feature(panic_unwind))]
+#![needs_panic_runtime]
 
 // For the `const_generics` feature.
 #![allow(incomplete_features)]
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
+// TODO: Put this behind a feature flag to allow disabling panics.
+extern crate panic_unwind;
+
 #[macro_use] extern crate paste;
 #[cfg(not(feature = "stub-only"))] extern crate alloc;
-#[cfg(not(feature = "stub-only"))] extern crate panic_unwind;
 
 #[macro_use]
 #[doc(hidden)]
