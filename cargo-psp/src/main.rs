@@ -193,10 +193,6 @@ fn main() {
         },
     };
 
-    // FIXME: This is a workaround. This should eventually be removed.
-    let rustflags = env::var("RUSTFLAGS").unwrap_or("".into())
-        + " -C link-dead-code -C opt-level=3";
-
     let mut process = Command::new("cargo")
         .arg("build")
         .arg("-Z")
@@ -204,7 +200,6 @@ fn main() {
         .arg("--target")
         .arg("mipsel-sony-psp")
         .args(args)
-        .env("RUSTFLAGS", rustflags)
         .stdin(Stdio::inherit())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
