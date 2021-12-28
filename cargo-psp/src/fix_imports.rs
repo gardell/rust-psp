@@ -88,6 +88,8 @@ pub fn fix<T: AsRef<Path>>(path: T) {
         entries
     };
 
+    let bytes2 = bytes.clone();
+
     // Iterator of mutable byte slices (of stub lib entries) in raw ELF binary.
     let stub_entry_bufs = bytes[start..end]
         .chunks_mut(mem::size_of::<SceStubLibraryEntry>());
@@ -109,7 +111,16 @@ pub fn fix<T: AsRef<Path>>(path: T) {
 
         stub.stub_count = ((nid_end - stub.nid_table) / NID_SIZE) as u16;
 
-        println!("[0x{:08x}]: Stub count: {}", stub.nid_table, stub.stub_count);
+        // TODO: Pre-calculate the name array earlier for simplicity.
+        let name = bytes2[(stub.name as u64 + rodata_sce_nid.sh_offset - rodata_sce_nid.sh_addr) as usize..]
+            .iter()
+            .copied()
+            .take_while(|b| *b != 0)
+            .map(|b| b as char)
+            .collect::<String>();
+
+        // TODO: Print this in debug only.
+        println!("[0x{:08x}] {}: Stub count: {}", stub.nid_table, name, stub.stub_count);
 
         // Re-serialize the stub and save.
         let serialized = bincode::serialize(&stub).unwrap();
